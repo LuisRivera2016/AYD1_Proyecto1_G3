@@ -57,7 +57,7 @@ function Categorias() {
                                 <Card.Img variant="top" src={logo}/>
                                 <Card.Body>
                                     <Card.Title>
-                                        <Link  to={`/empresasProducto/${item.nombre}`} style={{ textDecoration: 'none' }}>
+                                        <Link  to={`/empresasProducto/${item.id_categoria}`} style={{ textDecoration: 'none' }}>
                                             <Button variant="btn btn-link" type="button">{item.nombre}</Button>
                                         </Link >
                                     </Card.Title>

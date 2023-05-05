@@ -43,7 +43,7 @@ function App() {
           <Route path="/panelControl" element={<PanelControlProductos/>} />
           <Route path="/productosEmpresa" element={<VerProductosEmpresa/>} />
           <Route path="/admin" element={<Admin/>} />
-          <Route path='/empresasProducto/:nombre' element={< Empresas/>}  />
+          <Route path='/empresasProducto/:idCategoria' element={< Empresas/>}  />
           <Route path='/productos/:idEmpresa' element={< Productos/>}  />
           <Route path='/reportesAdmin' element={< Reportes/>}  />
         </Routes>      
