@@ -135,7 +135,7 @@ function CarritoCompras() {
         Calificacion:-1, //to-do (se deja asi pq al inicio no ha calificado el pedido)
         IdMunicipio:1, //to-do
         IdUsuario:parseInt(localStorage.getItem('idUsuario')), 
-        IdRepartidor:null, // to-do (se deja asi pq al inicio no tiene repartidor)
+        IdRepartidor:1, // to-do (se deja asi pq al inicio no tiene repartidor)
         IdTarjeta:parseInt(document.getElementById('cmbTarjeta').value),
 
         productos: carrito.items.map((item) => {
