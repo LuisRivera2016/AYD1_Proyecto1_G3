@@ -62,6 +62,7 @@ function Productos() {
         a.push(orden);
         localStorage.setItem('carrito', JSON.stringify(a));
         console.log(localStorage.getItem('carrito'))
+        window.location.reload();
     }
 
     const onImageError = (e) => {

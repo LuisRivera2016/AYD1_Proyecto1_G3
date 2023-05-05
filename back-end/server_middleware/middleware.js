@@ -36,7 +36,8 @@ function getUrl(baseURL, endpoint) {
     "/ObtenerDepartamentos",
     "/ObtenerMunicipiosxDepto",
     "/ObtenerEmpresasPorCategorias",
-    "/ObtenerProductosPorEmpresa"
+    "/ObtenerProductosPorEmpresa",
+    "/AceptarPedido"
   ];
   let admin = [
     "/userDisable", 
