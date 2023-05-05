@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from 'react-bootstrap/Card';
-import logo from './holder.png'; // Tell webpack this JS file uses this image
+import placeholderImage from './product-placeholder.png'; // Tell webpack this JS file uses this image
 import { useParams } from 'react-router-dom';
 
 
@@ -18,11 +18,11 @@ function Productos() {
     const [productos, setProductos] = useState([]);
     let token = localStorage.getItem("token");
     const [carrito, setCarrito] = useState([]);
-    const { nombre } = useParams();
+    const { idEmpresa } = useParams();
 
     useEffect(() => {
         let data = {}
-        data.idEmpresa = 1;
+        data.idEmpresa = idEmpresa;
 
         let requestOptionsPOST = { 
             method: "POST", 
@@ -46,13 +46,13 @@ function Productos() {
       function agregarProducto(item) {
         let orden = {}
         let producto = {}
-        producto.id_producto = 1;
+        producto.id_producto = item.id_producto;
         producto.nombre = item.nombre;
         producto.descripcion = item.descripcion;
-        producto.foto = "foto";
+        producto.foto = item.foto;
         producto.precio = item.precio;
-        producto.id_categoria = 1;
-        producto.id_empresa = 1;
+        producto.id_categoria = item.id_categoriaProducto;
+        producto.id_empresa = idEmpresa;
         orden.producto = producto;
         orden.cantidad = 1;
         orden.personalizar = "";
@@ -62,6 +62,10 @@ function Productos() {
         a.push(orden);
         localStorage.setItem('carrito', JSON.stringify(a));
         console.log(localStorage.getItem('carrito'))
+    }
+
+    const onImageError = (e) => {
+        e.target.src = placeholderImage
     }
   
     return (
@@ -74,7 +78,7 @@ function Productos() {
                 return (
                     <Col key={index}>
                         <Card value={item.nombre} style={{ width: '14rem' }}>
-                            <Card.Img variant="top" src={logo}/>
+                            <Card.Img variant="top" src={item.foto ? item.foto : placeholderImage} onError={onImageError}/>
                             <Card.Body>
                             <Card.Text>
                                 {item.nombre}<br/>

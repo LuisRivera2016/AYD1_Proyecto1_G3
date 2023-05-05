@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import config from '../../config';
@@ -14,9 +14,7 @@ function CarritoCompras() {
     const [show, setShow] = useState(false);
     const [validated, setValidated] = useState(false);
 
-    const [carrito, setCarrito] = useState({
-      items: JSON.parse(localStorage.getItem('carrito')),
-    });
+    const [carrito, setCarrito] = useState({items:[]});
 
     //Para la alerta
     const [showAlert, setShowAlert] = useState(false);
@@ -33,6 +31,12 @@ function CarritoCompras() {
         setAlertKey(alertKey + 1); // Incrementa la clave única para forzar el reinicio del componente
     }
     
+    useEffect(() => {
+        let itemsGuardados =  JSON.parse(localStorage.getItem('carrito'))
+        if (itemsGuardados != null) {
+          setCarrito({items:itemsGuardados})
+        }
+    }, []);
     const handleClose = () => {setShow(false)};//addProducto()
     const handleShow = () => {setShow(true)};
 
@@ -71,9 +75,11 @@ function CarritoCompras() {
   
     function getCantidad() {
       let total = 0;
-      carrito.items.forEach((item) => {
-        total += item.cantidad;
-      });
+      if (carrito.items != null ){
+        carrito.items.forEach((item) => {
+          total += item.cantidad;
+        });
+      }
       //setNumero(total)
       return total;
     }
@@ -106,25 +112,30 @@ function CarritoCompras() {
     }
 
     const confirmarPago = (event) => {
-      event.preventDefault();
-      const form = event.currentTarget;
-      event.stopPropagation();
+      //event.preventDefault();
+      //const form = event.currentTarget;
+      //event.stopPropagation();
       setValidated(true);
-      if (form.checkValidity() === false) {return}
-      
-      if (event.target.cmbTarjeta.value == -1){
+      console.log("hola")
+
+      //if (form.checkValidity() === false) {return}
+      if (document.getElementById('cmbTarjeta').value == -1){
         ShowMsg("danger","Tarjeta Invalida","Seleccione una tarjeta valida")
+        return
+      }
+      if (document.getElementById('txtDireccion').value == ""){
+        ShowMsg("danger","Direccion Invalida","Ingrese una direccion valida")
         return
       }
 
       const data = {
         Estado:1,
-        Instrucciones:event.target.txtInst.value,
-        Direccion:event.target.txtDireccion.value,
-        Calificacion:-1, //to-do
+        Instrucciones:document.getElementById('txtInst').value,
+        Direccion:document.getElementById('txtDireccion').value,
+        Calificacion:-1, //to-do (se deja asi pq al inicio no ha calificado el pedido)
         IdMunicipio:1, //to-do
-        IdUsuario:1, //to-do
-        IdRepartidor:null, //to-do
+        IdUsuario:parseInt(localStorage.getItem('idUsuario')), 
+        IdRepartidor:null, // to-do (se deja asi pq al inicio no tiene repartidor)
         IdTarjeta:parseInt(document.getElementById('cmbTarjeta').value),
 
         productos: carrito.items.map((item) => {
@@ -142,7 +153,7 @@ function CarritoCompras() {
         fetch(`${config.apiUrlUsuarios}/AceptarPedido`,config.requestOptionsPOST)
         .then(response => {
             if (!response.ok) {
-                console.error(response.statusText);
+                console.error(response);
                 ShowMsg("danger","Error procesar el pedido",response)
             }
             return response.json();
@@ -251,11 +262,11 @@ function CarritoCompras() {
         <Modal.Body>
               <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                 <Form.Label>Confirmar Direccion de entrega* </Form.Label>
-                <Form.Control type="text" required name='txtDireccion' placeholder="12-30 zona 0 Guatemala"/>
+                <Form.Control type="text" required name='txtDireccion' id='txtDireccion' placeholder="12-30 zona 0 Guatemala"/>
               </Form.Group>
               <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                 <Form.Label>Instrucciones de Entrega</Form.Label>
-                <Form.Control as="textarea" name='txtInst' rows={3} placeholder="dejar en puerta" />
+                <Form.Control as="textarea" name='txtInst' id='txtInst' rows={3} placeholder="dejar en puerta" />
               </Form.Group>
               <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
                 <Form.Label>Metodo de pago</Form.Label>
@@ -271,7 +282,7 @@ function CarritoCompras() {
           <Button variant="secondary" onClick={() => setShowConf(false)}>
             Cancelar
           </Button>
-          <Button variant="success" type="submit">
+          <Button variant="success" type="submit" onClick={() => confirmarPago(false)}>
             Confirmar Pago
           </Button>
         </Modal.Footer>

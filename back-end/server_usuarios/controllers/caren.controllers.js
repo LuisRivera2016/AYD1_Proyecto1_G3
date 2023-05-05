@@ -129,7 +129,7 @@ export const query3 = async (req, res) => {
     try {
         console.log(req.body)
         var query1 = conn.query(
-            `SELECT nombre, descripcion,foto,precio FROM Producto WHERE id_empresa = '${req.body.idEmpresa}';`,
+            `SELECT id_producto, id_categoria, nombre, descripcion,foto,precio FROM Producto WHERE id_empresa = '${req.body.idEmpresa}';`,
             function (err, result) {    
                 if (err) throw err
                 if (result.length > 0) {

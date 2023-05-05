@@ -18,11 +18,11 @@ function Empresas() {
     let navigate = useNavigate();
     const [empresas, setEmpresas] = useState([]);
     let token = localStorage.getItem("token");
-    const { nombre } = useParams();
+    const { idCategoria } = useParams();
 
     useEffect(() => {
         let data = {}
-        data.NombreCategoria = nombre;
+        data.IdCategoria = idCategoria;
 
         let requestOptionsPOST = { 
             method: "POST", 
@@ -35,7 +35,7 @@ function Empresas() {
         .then((response) => { 
             return response.json().then((data) => {
                 console.log(data)
-                setEmpresas(data.Empresas);
+                setEmpresas(data);
                 console.log(empresas)
             }).catch((err) => {
                 console.log(err);
@@ -56,7 +56,7 @@ function Empresas() {
                             <Card.Img variant="top" src={logo}/>
                             <Card.Body>
                                 <Card.Title>
-                                    <Link  to={`/productos/${item.nombre}`} style={{ textDecoration: 'none' }}>
+                                    <Link  to={`/productos/${item.id_empresa}`} style={{ textDecoration: 'none' }}>
                                         <Button variant="btn btn-link" type="button">{item.nombre}</Button>
                                     </Link >
                                 </Card.Title>
